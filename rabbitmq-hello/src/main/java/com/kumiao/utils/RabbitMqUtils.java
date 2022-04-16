@@ -13,21 +13,21 @@ import java.util.concurrent.TimeoutException;
  * @date ：Created in 2022/4/16 14:10
  */
 public class RabbitMqUtils {
-    private Connection connection = null;
-    private Channel channel = null;
 
 
 
 
-    public Channel getChannel() {
+    public static Channel getChannel() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost("localhost");
         connectionFactory.setPort(5672);
         connectionFactory.setUsername("guest");
         connectionFactory.setPassword("guest");
 
+        Channel channel = null;
+
         try {
-            connection = connectionFactory.newConnection();
+            Connection connection = connectionFactory.newConnection();
             System.out.println("获取连接！");
             channel = connection.createChannel();
             System.out.println("获取通道！");
@@ -42,7 +42,7 @@ public class RabbitMqUtils {
     /**
      * 关闭通道及连接
      */
-    public void close() {
+/*    public void close() {
         if (channel != null && channel.isOpen()) {
             try {
                 channel.close();
@@ -61,6 +61,6 @@ public class RabbitMqUtils {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
 }
