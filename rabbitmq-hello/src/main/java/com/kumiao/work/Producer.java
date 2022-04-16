@@ -21,6 +21,8 @@ public class Producer {
     /**
      * 发送消息
      *
+     *
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -34,6 +36,7 @@ public class Producer {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         } catch (IOException e) {
             e.printStackTrace();
+
         }
         // 消息
         String message = "";
@@ -56,6 +59,8 @@ public class Producer {
         } finally {
             // 关闭
             mqUtils.close();
+
+
         }
     }
 }
