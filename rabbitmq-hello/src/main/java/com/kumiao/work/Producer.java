@@ -58,7 +58,7 @@ public class Producer {
             e.printStackTrace();
         } finally {
             // 关闭
-            mqUtils.close();
+//            mqUtils.close();
 
 
         }
