@@ -6,6 +6,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author ：m
@@ -26,8 +27,15 @@ public class Work02 {
         // 获取通道
         Channel channel = mqUtils.getChannel();
 
+
         // 接收消息处理方法
         DeliverCallback deliverCallback = (consumerTag, message) -> {
+
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             System.out.println("收到的消息：" + new String(message.getBody()));
         };
         // 接收失败处理方法
@@ -36,8 +44,13 @@ public class Work02 {
         };
 
         System.out.println("正在接收信息...");
+        // 接收处理
+        // 接收处理
+
         try {
-            // 接收处理
+
+
+
             channel.basicConsume(QUEUE_NAME, true, deliverCallback, cancelCallback);
         } catch (IOException e) {
             e.printStackTrace();

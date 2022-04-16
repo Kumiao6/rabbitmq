@@ -29,6 +29,7 @@ public class Work01 {
 
         // 接收消息处理方法
         DeliverCallback deliverCallback = (consumerTag, message) -> {
+
             System.out.println("收到的消息：" + new String(message.getBody()));
         };
         // 接收失败处理方法
@@ -38,6 +39,8 @@ public class Work01 {
 
         System.out.println("正在接收信息...");
         try {
+
+
             // 接收处理
             channel.basicConsume(QUEUE_NAME, true, deliverCallback, cancelCallback);
         } catch (IOException e) {
