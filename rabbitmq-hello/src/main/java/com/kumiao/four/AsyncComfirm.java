@@ -7,6 +7,8 @@ import com.rabbitmq.client.ConfirmCallback;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * @author ：m
@@ -29,7 +31,9 @@ public class AsyncComfirm {
 
         }
 
-        public static void publicMessageAsync() throws Exception{
+
+
+    public static void publicMessageAsync() throws Exception{
             Channel channel = RabbitMqUtils.getChannel();
             String queueName = UUID.randomUUID().toString();
             channel.queueDeclare(queueName,false,false,false,null);
@@ -39,9 +43,25 @@ public class AsyncComfirm {
             // 开始时间
             long begin = System.currentTimeMillis();
 
-            // 消息确认成功回调函数
+
+        /**
+         * 线程有序的一个哈希表，选用于高迸发的情况下
+         * 1、轻松地将序号与消息进行并联
+         * 2、轻松批量删除，只要序号
+         * 3、支持高并发
+         */
+        ConcurrentSkipListMap concurrentSkipListMap = new ConcurrentSkipListMap<>();
+
+
+        // 消息确认成功回调函数
             ConfirmCallback ackCallback = (deliveryTag, multiply) -> {
                 System.out.println("确认的消息："+deliveryTag);
+                if (multiply) {
+                    ConcurrentNavigableMap<Long,String> concurrentNavigableMap = concurrentSkipListMap.headMap(deliveryTag);
+                    concurrentNavigableMap.clear();
+                }else{
+                    concurrentSkipListMap.remove(deliveryTag);
+                }
             };
 
             // 消息确认失败回调函数
@@ -64,14 +84,13 @@ public class AsyncComfirm {
             for (int i = 0; i < MESSAGE_COUNT; i++) {
                 String message = "消息" + i;
                 channel.basicPublish("",queueName,null,message.getBytes(StandardCharsets.UTF_8));
+                concurrentSkipListMap.put(channel.getNextPublishSeqNo(), message);
             }
 
             // 结束时间
             long end = System.currentTimeMillis();
             System.out.println("发布"+MESSAGE_COUNT+"个异步确认消息，耗时"+ (end - begin) + "ms");
         }
-
-
 
 
 
