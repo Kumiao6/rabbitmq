@@ -25,6 +25,8 @@ public class ComfirmMessage {
     public static void main(String[] args) throws Exception {
         // 1、单个确认
         // 发布1000个单独确认消息，耗时567ms
+//        ComfirmMessage.publishMessageIndividually();
+        //2、批量确认
         ComfirmMessage.publishMessageIndividually();
 
     }
