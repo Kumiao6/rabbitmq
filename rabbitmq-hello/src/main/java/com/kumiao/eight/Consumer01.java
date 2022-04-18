@@ -39,11 +39,13 @@ public class Consumer01 {
         HashMap<String, Object> arguments = new HashMap<>();
 
         //过期时间
-        arguments.put("x-message-ttl",1000);
+//        arguments.put("x-message-ttl",1000);
         //正常队列设置死信队列
         arguments.put("x-dead-letter-exchange",DEAD_EXCHANGE);
         //设置死信RoutingKey
         arguments.put("x-dead-letter-routing-key","lisi");
+        //设置死信队列的长度限制
+//        arguments.put("x-max-length", 6);
 
         //声明死信和普通队列
         channel.queueDeclare(NORMAL_QUEUE,false,false,false,arguments);
@@ -56,9 +58,18 @@ public class Consumer01 {
         System.out.println("等待接收消息......");
 
         DeliverCallback deliverCallback = (consumerTag,message) -> {
-            System.out.println("Consumer01接收的消息是：" + new String(message.getBody()));
-        };
+            String msg = new String(message.getBody(), "UTF-8");
+            if (msg.equals("info5")) {
+                System.out.println("Consumer01接收的消息是：" + msg + ":此信息是被拒绝的");
+                channel.basicReject(message.getEnvelope().getDeliveryTag(),false);
+            } else {
+                System.out.println("Consumer01接收的消息是：" + msg);
+                channel.basicAck(message.getEnvelope().getDeliveryTag(),false);
 
-        channel.basicConsume(NORMAL_QUEUE,true,deliverCallback,consumerTag->{});
+            }
+
+        };
+        //开启手动应答
+        channel.basicConsume(NORMAL_QUEUE,false,deliverCallback,consumerTag->{});
     }
 }
