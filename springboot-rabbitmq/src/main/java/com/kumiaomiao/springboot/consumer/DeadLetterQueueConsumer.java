@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.channels.Channel;
+import java.time.LocalTime;
 import java.util.Date;
 
 
@@ -17,12 +18,14 @@ import java.util.Date;
 @Slf4j
 @Component
 public class DeadLetterQueueConsumer {
-
-    //接收消息
+    /**
+     * 监听队列QD
+     * @param message
+     */
     @RabbitListener(queues = "QD")
-    public void receiveD(Message message, Channel channel) throws Exception {
+    //public void receiveD(Message message, Channel channel) throws Exception {
+    public void receiveQueueD(Message message){
         String msg = new String(message.getBody());
-        log.info("当前时间：{}，收到死信队列的消息：{}",new Date().toString(),msg);
+        log.info("时间：{}，接收到的消息：{}", LocalTime.now(),msg);
     }
 }
-
