@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author ：m
  * @date ：Created in 2022/4/20 10:44
  */
-@Component
+//@Component
 @Slf4j
 public class Consumer {
 
