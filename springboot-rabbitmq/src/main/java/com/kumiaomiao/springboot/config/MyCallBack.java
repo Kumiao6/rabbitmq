@@ -29,7 +29,7 @@ public class MyCallBack implements RabbitTemplate.ConfirmCallback,RabbitTemplate
     @PostConstruct
     public void init() {
         rabbitTemplate.setConfirmCallback(this);
-        rabbitTemplate.setReturnsCallback((RabbitTemplate.ReturnsCallback) this);
+        rabbitTemplate.setReturnsCallback(this);
     }
 
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("//")
+@RequestMapping("/confirm")
 public class ConfirmProducerController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -50,7 +50,7 @@ public class ConfirmProducerController {
         );
 
         log.info("消息：【" + msg + "】己发送!");
-        return "OK";
+        return "NoOK";
 
     }
 }
